@@ -9,11 +9,12 @@ import lombok.*;
 // cf. https://examples.javacodegeeks.com/spring-boot-with-lombok/
 @Getter @Setter @NoArgsConstructor @RequiredArgsConstructor @ToString
 @Entity // Une entité JPA
-public class Galerie {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Personne {
     @Id  @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Integer id;
 
-    @Column(unique=true)
+    @Column
     @NonNull
     private String nom;
     
@@ -21,19 +22,16 @@ public class Galerie {
     @NonNull
     private String adresse;
     
-    // TODO : Mettre en oeuvre la relation oneToMany vers Exposition
-    @OneToMany(mappedBy = "galerie")
-    List<Exposition> accrochages = new LinkedList<>();
-   
-    public float CAAnnuel (int annee){
-        float cAnnuel = 0;
-        for (Exposition e : accrochages){
-            if (e.getDebut().getYear() == annee){
-                cAnnuel += e.chifreAffaire();
+    @OneToMany(mappedBy="personne")
+    List<Transaction> transactions = new LinkedList<>();
+    
+    public float budgetArt(int annee){
+        float bArt = 0;
+        for (Transaction t : transactions){
+            if (t.getVenduLe().getYear() == annee){
+                bArt += t.getPrixVente();
             }
         }
-        return cAnnuel;
+        return bArt;
     }
-    
-    
-}
+}   

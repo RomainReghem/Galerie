@@ -9,31 +9,32 @@ import lombok.*;
 // cf. https://examples.javacodegeeks.com/spring-boot-with-lombok/
 @Getter @Setter @NoArgsConstructor @RequiredArgsConstructor @ToString
 @Entity // Une entité JPA
-public class Galerie {
+public class Tableau {
     @Id  @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Integer id;
-
-    @Column(unique=true)
-    @NonNull
-    private String nom;
     
-    @Column(unique=true)
+    @Column
     @NonNull
-    private String adresse;
+    private String titre;
     
-    // TODO : Mettre en oeuvre la relation oneToMany vers Exposition
-    @OneToMany(mappedBy = "galerie")
+    @Column
+    @NonNull
+    private String support;
+    
+    @Column
+    @NonNull
+    private int largeur;
+    
+    @Column
+    @NonNull
+    private int hauteur;
+    
+    @ManyToMany(mappedBy="tableaux")
     List<Exposition> accrochages = new LinkedList<>();
-   
-    public float CAAnnuel (int annee){
-        float cAnnuel = 0;
-        for (Exposition e : accrochages){
-            if (e.getDebut().getYear() == annee){
-                cAnnuel += e.chifreAffaire();
-            }
-        }
-        return cAnnuel;
-    }
     
+    @ManyToOne
+    private Artiste artiste;
     
+    @OneToOne(mappedBy="tableau")
+    private Transaction transaction;
 }
